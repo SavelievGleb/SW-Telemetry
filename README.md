@@ -2,6 +2,8 @@
 ![dotnet](https://img.shields.io/badge/.NET-6.0-blue) ![npm](https://img.shields.io/badge/NPM-10.1.0-blue)
 ## Getting started
 Устанавливаем [Node JS](https://nodejs.org/en) и [.NET 6.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.26-windows-x64-installer)
+
+Микроконтроллеры находятся в папке `StormWorks microprocessors`, их необходимо скопировать по пути *C:\Users\Пользователь\AppData\Roaming\Stormworks\data\microprocessors*
 ### Запуск HTTP сервера
 Заходим в папку `HTTP_Server` и запускаем `update.bat`. Должна создаться папка `node_modules`.<br>
 Если папка не была создана, проверьте установку *Node JS* и повторите попытку.<br>
