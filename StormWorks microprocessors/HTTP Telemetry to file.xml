@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<microprocessor name="HTTP Telemetry to file" description="No description set." width="2" length="1" id_counter="44" id_counter_node="2" sym2="30532" sym3="4420" sym4="29020" sym5="4356" sym6="29020" sym9="9290" sym10="9290" sym11="58446" sym12="42058" sym13="61162">
+	<nodes>
+		<n id="1" component_id="2">
+			<node label="Data to send" mode="1" type="5" description="The input signal to be processed."/>
+		</n>
+		<n id="2" component_id="3">
+			<node label="Send" mode="1" description="The input signal to be processed.">
+				<position x="1"/>
+			</node>
+		</n>
+	</nodes>
+	<group>
+		<data>
+			<inputs/>
+			<outputs/>
+		</data>
+		<components>
+			<c type="56">
+				<object id="4" script="gn = input.getNumber
+gb = input.getBool
+sn = output.setNumber
+sb = output.setBool
+sin = math.sin
+cos = math.cos
+pi = math.pi
+pi2 = pi * 2
+sqrt = math.sqrt
+atan = math.atan
+abs = math.abs
+pn = function(v)
+	return property.getNumber(v) or 0
+end
+pb = function(v)
+	return property.getBool(v) or false
+end
+pt = function(v)
+	return property.getText(v) or ''
+end
+
+freq = 60 / (property.getNumber('Data collect Frequency') or 1) - 1
+cnt = freq
+
+port = 25605
+labelName = 'Channel'
+httpReady = true
+data = {}
+start = false
+labelSend = false
+
+function onTick()
+	-- Start transmit
+	if gb(1) and not start then
+		data = {}
+		start = true
+		httpReady = false
+		async.httpGet(port, '/clear')
+	end
+	-- Stop transmit
+	if not gb(1) then
+		start = false
+		labelSend = false
+	end
+	-- Transmit labels
+	if httpReady and start and not labelSend then
+		httpReady = false
+		labelSend = true
+		local req = '/write?'
+		for i = 1, 32, 1 do
+			local label = pt(labelName .. ' ' .. i)
+			if label ~= '' then
+				label = label:gsub(' ', '_')
+				req = req .. 'p' .. i .. '=' .. label .. '&amp;'
+			end
+		end
+		req = string.sub(req, 1, #req - 1)
+		async.httpGet(port, req)
+	end
+	-- Collect data
+	if cnt &gt;= freq and start then
+		cnt = 0
+		local d = {}
+		for i = 1, 32, 1 do
+			if pt(labelName .. ' ' .. i) ~= '' then
+				table.insert(d, gn(i))
+			end
+		end
+		table.insert(data, d)
+	else
+		cnt = cnt + 1
+	end
+	-- Send collected data
+	if #data &gt; 0 and httpReady then
+		httpReady = false
+		local req = '/write?'
+		for i, v in ipairs(data[1]) do
+			req = req .. 'p' .. i .. '=' .. v .. '&amp;'
+		end
+		req = string.sub(req, 1, #req - 1)
+		async.httpGet(port, req)
+		table.remove(data, 1)
+	end
+	-- Show data to send
+	sn(1, #data)
+end
+
+function httpReply(port, url, body)
+	httpReady = true
+end
+">
+					<pos x="4" y="-0.75"/>
+					<in1 component_id="5"/>
+				</object>
+			</c>
+			<c type="41">
+				<object id="5" count="1">
+					<pos x="2.5" y="-0.75"/>
+					<inc component_id="2"/>
+					<in1 component_id="3"/>
+				</object>
+			</c>
+			<c type="31">
+				<object id="6">
+					<pos x="5.5" y="-0.5"/>
+					<in1 component_id="4"/>
+				</object>
+			</c>
+			<c type="43">
+				<object id="7" l="Data to send">
+					<pos x="7" y="-0.75"/>
+					<in1 component_id="6"/>
+				</object>
+			</c>
+			<c type="20">
+				<object id="8" name="Data collect Frequency" i="4">
+					<pos x="4" y="-1.25"/>
+					<items>
+						<i l="1 hz">
+							<v text="1" value="1"/>
+						</i>
+						<i l="5 hz">
+							<v text="5" value="5"/>
+						</i>
+						<i l="10 hz">
+							<v text="10" value="10"/>
+						</i>
+						<i l="15 hz">
+							<v text="15" value="15"/>
+						</i>
+						<i l="20 hz">
+							<v text="20" value="20"/>
+						</i>
+						<i l="30 hz">
+							<v text="30" value="30"/>
+						</i>
+						<i l="60 hz">
+							<v text="60" value="60"/>
+						</i>
+					</items>
+				</object>
+			</c>
+			<c type="58">
+				<object id="13" n="Channel 1">
+					<pos x="1.75" y="-2.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="14" n="Channel 2">
+					<pos x="1.75" y="-2.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="15" n="Channel 3">
+					<pos x="1.75" y="-3.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="16" n="Channel 4">
+					<pos x="1.75" y="-3.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="17" n="Channel 5">
+					<pos x="1.75" y="-4.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="18" n="Channel 6">
+					<pos x="1.75" y="-4.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="19" n="Channel 7">
+					<pos x="1.75" y="-5.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="20" n="Channel 8">
+					<pos x="1.75" y="-5.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="21" n="Channel 9">
+					<pos x="3.25" y="-2.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="22" n="Channel 10">
+					<pos x="3.25" y="-2.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="23" n="Channel 11">
+					<pos x="3.25" y="-3.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="24" n="Channel 12">
+					<pos x="3.25" y="-3.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="25" n="Channel 13">
+					<pos x="3.25" y="-4.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="26" n="Channel 14">
+					<pos x="3.25" y="-4.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="27" n="Channel 15">
+					<pos x="3.25" y="-5.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="28" n="Channel 16">
+					<pos x="3.25" y="-5.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="29" n="Channel 17">
+					<pos x="4.75" y="-2.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="30" n="Channel 18">
+					<pos x="4.75" y="-2.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="31" n="Channel 19">
+					<pos x="4.75" y="-3.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="32" n="Channel 20">
+					<pos x="4.75" y="-3.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="33" n="Channel 21">
+					<pos x="4.75" y="-4.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="34" n="Channel 22">
+					<pos x="4.75" y="-4.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="35" n="Channel 23">
+					<pos x="4.75" y="-5.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="36" n="Channel 24">
+					<pos x="4.75" y="-5.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="37" n="Channel 25">
+					<pos x="6.25" y="-2.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="38" n="Channel 26">
+					<pos x="6.25" y="-2.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="39" n="Channel 27">
+					<pos x="6.25" y="-3.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="40" n="Channel 28">
+					<pos x="6.25" y="-3.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="41" n="Channel 29">
+					<pos x="6.25" y="-4.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="42" n="Channel 30">
+					<pos x="6.25" y="-4.75"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="43" n="Channel 31">
+					<pos x="6.25" y="-5.25"/>
+				</object>
+			</c>
+			<c type="58">
+				<object id="44" n="Channel 32">
+					<pos x="6.25" y="-5.75"/>
+				</object>
+			</c>
+		</components>
+		<components_bridge>
+			<c type="4">
+				<object id="2">
+					<pos x="1" y="-0.5"/>
+				</object>
+			</c>
+			<c>
+				<object id="3">
+					<pos y="-0.75"/>
+				</object>
+			</c>
+		</components_bridge>
+		<groups/>
+		<component_states>
+			<c0 id="4" script="gn = input.getNumber
+gb = input.getBool
+sn = output.setNumber
+sb = output.setBool
+sin = math.sin
+cos = math.cos
+pi = math.pi
+pi2 = pi * 2
+sqrt = math.sqrt
+atan = math.atan
+abs = math.abs
+pn = function(v)
+	return property.getNumber(v) or 0
+end
+pb = function(v)
+	return property.getBool(v) or false
+end
+pt = function(v)
+	return property.getText(v) or ''
+end
+
+freq = 60 / (property.getNumber('Data collect Frequency') or 1) - 1
+cnt = freq
+
+port = 25605
+labelName = 'Channel'
+httpReady = true
+data = {}
+start = false
+labelSend = false
+
+function onTick()
+	-- Start transmit
+	if gb(1) and not start then
+		data = {}
+		start = true
+		httpReady = false
+		async.httpGet(port, '/clear')
+	end
+	-- Stop transmit
+	if not gb(1) then
+		start = false
+		labelSend = false
+	end
+	-- Transmit labels
+	if httpReady and start and not labelSend then
+		httpReady = false
+		labelSend = true
+		local req = '/write?'
+		for i = 1, 32, 1 do
+			local label = pt(labelName .. ' ' .. i)
+			if label ~= '' then
+				label = label:gsub(' ', '_')
+				req = req .. 'p' .. i .. '=' .. label .. '&amp;'
+			end
+		end
+		req = string.sub(req, 1, #req - 1)
+		async.httpGet(port, req)
+	end
+	-- Collect data
+	if cnt &gt;= freq and start then
+		cnt = 0
+		local d = {}
+		for i = 1, 32, 1 do
+			if pt(labelName .. ' ' .. i) ~= '' then
+				table.insert(d, gn(i))
+			end
+		end
+		table.insert(data, d)
+	else
+		cnt = cnt + 1
+	end
+	-- Send collected data
+	if #data &gt; 0 and httpReady then
+		httpReady = false
+		local req = '/write?'
+		for i, v in ipairs(data[1]) do
+			req = req .. 'p' .. i .. '=' .. v .. '&amp;'
+		end
+		req = string.sub(req, 1, #req - 1)
+		async.httpGet(port, req)
+		table.remove(data, 1)
+	end
+	-- Show data to send
+	sn(1, #data)
+end
+
+function httpReply(port, url, body)
+	httpReady = true
+end
+">
+				<pos x="4" y="-0.75"/>
+				<in1 component_id="5"/>
+			</c0>
+			<c1 id="5" count="1">
+				<pos x="2.5" y="-0.75"/>
+				<inc component_id="2"/>
+				<in1 component_id="3"/>
+			</c1>
+			<c2 id="6">
+				<pos x="5.5" y="-0.5"/>
+				<in1 component_id="4"/>
+			</c2>
+			<c3 id="7" l="Data to send">
+				<pos x="7" y="-0.75"/>
+				<in1 component_id="6"/>
+			</c3>
+			<c4 id="8" name="Data collect Frequency" i="4">
+				<pos x="4" y="-1.25"/>
+				<items>
+					<i l="1 hz">
+						<v text="1" value="1"/>
+					</i>
+					<i l="5 hz">
+						<v text="5" value="5"/>
+					</i>
+					<i l="10 hz">
+						<v text="10" value="10"/>
+					</i>
+					<i l="15 hz">
+						<v text="15" value="15"/>
+					</i>
+					<i l="20 hz">
+						<v text="20" value="20"/>
+					</i>
+					<i l="30 hz">
+						<v text="30" value="30"/>
+					</i>
+					<i l="60 hz">
+						<v text="60" value="60"/>
+					</i>
+				</items>
+			</c4>
+			<c5 id="13" n="Channel 1">
+				<pos x="1.75" y="-2.25"/>
+			</c5>
+			<c6 id="14" n="Channel 2">
+				<pos x="1.75" y="-2.75"/>
+			</c6>
+			<c7 id="15" n="Channel 3">
+				<pos x="1.75" y="-3.25"/>
+			</c7>
+			<c8 id="16" n="Channel 4">
+				<pos x="1.75" y="-3.75"/>
+			</c8>
+			<c9 id="17" n="Channel 5">
+				<pos x="1.75" y="-4.25"/>
+			</c9>
+			<c10 id="18" n="Channel 6">
+				<pos x="1.75" y="-4.75"/>
+			</c10>
+			<c11 id="19" n="Channel 7">
+				<pos x="1.75" y="-5.25"/>
+			</c11>
+			<c12 id="20" n="Channel 8">
+				<pos x="1.75" y="-5.75"/>
+			</c12>
+			<c13 id="21" n="Channel 9">
+				<pos x="3.25" y="-2.25"/>
+			</c13>
+			<c14 id="22" n="Channel 10">
+				<pos x="3.25" y="-2.75"/>
+			</c14>
+			<c15 id="23" n="Channel 11">
+				<pos x="3.25" y="-3.25"/>
+			</c15>
+			<c16 id="24" n="Channel 12">
+				<pos x="3.25" y="-3.75"/>
+			</c16>
+			<c17 id="25" n="Channel 13">
+				<pos x="3.25" y="-4.25"/>
+			</c17>
+			<c18 id="26" n="Channel 14">
+				<pos x="3.25" y="-4.75"/>
+			</c18>
+			<c19 id="27" n="Channel 15">
+				<pos x="3.25" y="-5.25"/>
+			</c19>
+			<c20 id="28" n="Channel 16">
+				<pos x="3.25" y="-5.75"/>
+			</c20>
+			<c21 id="29" n="Channel 17">
+				<pos x="4.75" y="-2.25"/>
+			</c21>
+			<c22 id="30" n="Channel 18">
+				<pos x="4.75" y="-2.75"/>
+			</c22>
+			<c23 id="31" n="Channel 19">
+				<pos x="4.75" y="-3.25"/>
+			</c23>
+			<c24 id="32" n="Channel 20">
+				<pos x="4.75" y="-3.75"/>
+			</c24>
+			<c25 id="33" n="Channel 21">
+				<pos x="4.75" y="-4.25"/>
+			</c25>
+			<c26 id="34" n="Channel 22">
+				<pos x="4.75" y="-4.75"/>
+			</c26>
+			<c27 id="35" n="Channel 23">
+				<pos x="4.75" y="-5.25"/>
+			</c27>
+			<c28 id="36" n="Channel 24">
+				<pos x="4.75" y="-5.75"/>
+			</c28>
+			<c29 id="37" n="Channel 25">
+				<pos x="6.25" y="-2.25"/>
+			</c29>
+			<c30 id="38" n="Channel 26">
+				<pos x="6.25" y="-2.75"/>
+			</c30>
+			<c31 id="39" n="Channel 27">
+				<pos x="6.25" y="-3.25"/>
+			</c31>
+			<c32 id="40" n="Channel 28">
+				<pos x="6.25" y="-3.75"/>
+			</c32>
+			<c33 id="41" n="Channel 29">
+				<pos x="6.25" y="-4.25"/>
+			</c33>
+			<c34 id="42" n="Channel 30">
+				<pos x="6.25" y="-4.75"/>
+			</c34>
+			<c35 id="43" n="Channel 31">
+				<pos x="6.25" y="-5.25"/>
+			</c35>
+			<c36 id="44" n="Channel 32">
+				<pos x="6.25" y="-5.75"/>
+			</c36>
+		</component_states>
+		<component_bridge_states>
+			<c0 id="2">
+				<pos x="1" y="-0.5"/>
+			</c0>
+			<c1 id="3">
+				<pos y="-0.75"/>
+			</c1>
+		</component_bridge_states>
+		<group_states/>
+	</group>
+</microprocessor>
+
