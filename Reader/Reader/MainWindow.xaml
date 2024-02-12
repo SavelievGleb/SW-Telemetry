@@ -6,8 +6,28 @@
         xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
         xmlns:local="clr-namespace:Reader"
         mc:Ignorable="d"
-        Title="Telemetry Reader" Height="450" Width="800" WindowStartupLocation="CenterScreen">
-    <Grid>
-        <ScottPlot:WpfPlot x:Name="WpfPlot1"/>
+        Title="Telemetry Reader" Height="450" Width="800" WindowStartupLocation="CenterScreen" FontSize="14">
+    <Grid Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="LoadButton" Content="Load" MinWidth="100" MinHeight="23" Margin="0,0,6,0" Click="LoadButton_Click"/>
+            <Button x:Name="SelectFileButton" Content="Select file" MinWidth="100" MinHeight="23" Margin="0,0,6,0" Click="SelectFileButton_Click"/>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" MinHeight="20">
+            <StackPanel Orientation="Horizontal">
+                <!--<CheckBox x:Name="CrosshairCheckBox" VerticalContentAlignment="Center" IsChecked="True"/>
+                <Label Content="Crosshair" Margin="0,0,6,0" MinHeight="29"/>-->
+                <StackPanel x:Name="SignalNamesStackPanel" Orientation="Horizontal">
+
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+        <ScottPlot:WpfPlot x:Name="WpfPlot1" Grid.Row="2"/>
+        <Label x:Name="FilePathLabel" Grid.Row="3" Content="Directory" MinHeight="29" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>
