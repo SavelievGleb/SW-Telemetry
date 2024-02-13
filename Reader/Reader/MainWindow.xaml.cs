@@ -25,6 +25,7 @@ namespace Reader
         OpenFileDialog fileDialog = new OpenFileDialog();
         WpfPlot plt;
         List<SignalPlot> signals;
+        Crosshair crosshair;
         public MainWindow()
         {
             InitializeComponent();
@@ -33,6 +34,7 @@ namespace Reader
             FilePathLabel.Content = fileDialog.FileName;
             plt = WpfPlot1;
             signals = new List<SignalPlot>();
+            crosshair = new Crosshair();
         }
 
         private void LoadButton_Click(object sender, RoutedEventArgs e)
@@ -126,11 +128,36 @@ namespace Reader
                 }
                 // Draw plot
                 plt.Plot.Legend();
+                crosshair = plt.Plot.AddCrosshair(0, 0);
+                crosshair.IsVisible = false;
                 plt.Refresh();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error");
+            }
+        }
+
+        private void WpfPlot1_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (CrosshairCheckBox.IsChecked == true)
+                crosshair.IsVisible = true;
+        }
+
+        private void WpfPlot1_MouseLeave(object sender, MouseEventArgs e)
+        {
+            crosshair.IsVisible = false;
+            plt.Refresh();
+        }
+
+        private void WpfPlot1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (CrosshairCheckBox.IsChecked == true)
+            {
+                (double coordinateX, double coordinateY) = plt.GetMouseCoordinates();
+                crosshair.X = coordinateX;
+                crosshair.Y = coordinateY;
+                plt.Refresh();
             }
         }
     }

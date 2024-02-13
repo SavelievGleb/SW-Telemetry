@@ -19,14 +19,14 @@
         </StackPanel>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" MinHeight="20">
             <StackPanel Orientation="Horizontal">
-                <!--<CheckBox x:Name="CrosshairCheckBox" VerticalContentAlignment="Center" IsChecked="True"/>
-                <Label Content="Crosshair" Margin="0,0,6,0" MinHeight="29"/>-->
+                <CheckBox x:Name="CrosshairCheckBox" VerticalContentAlignment="Center" IsChecked="True"/>
+                <Label Content="Crosshair" Margin="0,0,6,0" MinHeight="29"/>
                 <StackPanel x:Name="SignalNamesStackPanel" Orientation="Horizontal">
 
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
-        <WpfPlot x:Name="WpfPlot1" Grid.Row="2"/>
+        <WpfPlot x:Name="WpfPlot1" Grid.Row="2" MouseEnter="WpfPlot1_MouseEnter" MouseLeave="WpfPlot1_MouseLeave" MouseMove="WpfPlot1_MouseMove"/>
         <Label x:Name="FilePathLabel" Grid.Row="3" Content="Directory" MinHeight="29" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>
