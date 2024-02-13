@@ -70,7 +70,9 @@ namespace Reader
                 plt.Plot.Clear();
                 // Read file
                 string file = File.ReadAllText(fileDialog.FileName);
+                if (file == string.Empty) { MessageBox.Show("File is empty", "Error"); return; }
                 string[] line = file.TrimEnd('\n').Split('\n');
+                if (line.Length < 2) { MessageBox.Show("No data to draw", "Error"); return; }
                 string[] dataName = line[0].Split('\t');
                 // Parse file data
                 double[][] data = new double[dataName.Length][];
@@ -83,7 +85,14 @@ namespace Reader
                     string[] l = line[i].Split("\t");
                     for (int j = 0; j < l.Length; j++)
                     {
-                        data[j][i - 1] = double.Parse(l[j]);
+                        try
+                        {
+                            data[j][i - 1] = double.Parse(l[j]);
+                        }
+                        catch (Exception)
+                        {
+                            data[j][i - 1] = 0f;
+                        }
                     }
                 }
                 // Add signals
@@ -92,6 +101,8 @@ namespace Reader
                 {
                     var sig = plt.Plot.Add.Signal(data[i]);
                     sig.Label = dataName[i];
+                    sig.LineWidth = 3;
+                    sig.MaximumMarkerSize = 5;
                     signals.Add(sig);
                 }
                 // Draw labels
