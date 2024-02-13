@@ -3,10 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
         xmlns:local="clr-namespace:Reader"
         mc:Ignorable="d"
-        Title="Telemetry Reader" Height="450" Width="800" WindowStartupLocation="CenterScreen" FontSize="14">
+        Title="Telemetry Reader" Height="450" Width="800" WindowStartupLocation="CenterScreen" FontSize="14" MinWidth="800" MinHeight="450">
     <Grid Margin="3">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -27,7 +26,7 @@
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
-        <ScottPlot:WpfPlot x:Name="WpfPlot1" Grid.Row="2"/>
+        <WpfPlot x:Name="WpfPlot1" Grid.Row="2"/>
         <Label x:Name="FilePathLabel" Grid.Row="3" Content="Directory" MinHeight="29" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

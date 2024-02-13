@@ -12,7 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
-using ScottPlot.Plottables;
+using ScottPlot;
+using ScottPlot.Plottable;
 
 namespace Reader
 {
@@ -23,7 +24,7 @@ namespace Reader
     {
         OpenFileDialog fileDialog = new OpenFileDialog();
         WpfPlot plt;
-        List<Signal> signals;
+        List<SignalPlot> signals;
         public MainWindow()
         {
             InitializeComponent();
@@ -31,7 +32,7 @@ namespace Reader
             fileDialog.Filter = "txt files (*.txt)|*.txt";
             FilePathLabel.Content = fileDialog.FileName;
             plt = WpfPlot1;
-            signals = new List<Signal>();
+            signals = new List<SignalPlot>();
         }
 
         private void LoadButton_Click(object sender, RoutedEventArgs e)
@@ -96,13 +97,13 @@ namespace Reader
                     }
                 }
                 // Add signals
-                signals = new List<Signal>();
+                signals = new List<SignalPlot>();
                 for (int i = 0; i < data.Length; i++)
                 {
-                    var sig = plt.Plot.Add.Signal(data[i]);
+                    var sig = plt.Plot.AddSignal(data[i]);
                     sig.Label = dataName[i];
-                    sig.LineWidth = 3;
-                    sig.MaximumMarkerSize = 5;
+                    sig.LineWidth = 2;
+                    sig.MarkerSize = 6;
                     signals.Add(sig);
                 }
                 // Draw labels
@@ -111,7 +112,7 @@ namespace Reader
                 {
                     CheckBox checkBox = new CheckBox();
                     checkBox.IsChecked = true;
-                    checkBox.VerticalContentAlignment = VerticalAlignment.Center;
+                    checkBox.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
                     checkBox.Tag = i.ToString();
                     checkBox.Checked += (s, e) => { signals[Convert.ToInt16(checkBox.Tag)].IsVisible = true; plt.Refresh(); };
                     checkBox.Unchecked += (s, e) => { signals[Convert.ToInt16(checkBox.Tag)].IsVisible = false; plt.Refresh(); };
@@ -124,8 +125,7 @@ namespace Reader
                     SignalNamesStackPanel.Children.Add(label);
                 }
                 // Draw plot
-                plt.Plot.ShowLegend();
-                plt.Plot.Axes.AutoScale();
+                plt.Plot.Legend();
                 plt.Refresh();
             }
             catch (Exception ex)

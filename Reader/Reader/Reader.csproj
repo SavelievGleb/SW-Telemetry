@@ -13,11 +13,9 @@
     <Content Include="free-icon-line-graph-10327165.ico" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <PackageReference Include="ScottPlot.WPF" Version="5.0.21" />
+    <PackageReference Include="ScottPlot.WPF" Version="4.1.68" />
   </ItemGroup>
-
 
   <ItemGroup>
     <Compile Update="Settings.Designer.cs">
@@ -26,7 +24,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
-
 
   <ItemGroup>
     <None Update="Settings.settings">
