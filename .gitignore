@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 **/desktop.ini
+**/telemetry.txt

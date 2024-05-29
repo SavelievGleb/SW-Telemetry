@@ -20,7 +20,7 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" MinHeight="20">
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="CrosshairCheckBox" VerticalContentAlignment="Center" IsChecked="True"/>
-                <Label Content="Crosshair" Margin="0,0,6,0" MinHeight="29"/>
+                <Label Content="Crosshair" Margin="0,0,6,0" MinHeight="29" VerticalContentAlignment="Center"/>
                 <StackPanel x:Name="SignalNamesStackPanel" Orientation="Horizontal">
 
                 </StackPanel>

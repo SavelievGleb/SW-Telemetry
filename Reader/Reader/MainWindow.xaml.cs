@@ -114,6 +114,7 @@ namespace Reader
                 {
                     CheckBox checkBox = new CheckBox();
                     checkBox.IsChecked = true;
+                    checkBox.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                     checkBox.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
                     checkBox.Tag = i.ToString();
                     checkBox.Checked += (s, e) => { signals[Convert.ToInt16(checkBox.Tag)].IsVisible = true; plt.Refresh(); };
@@ -124,6 +125,7 @@ namespace Reader
                     label.Content = signals[i].Label;
                     label.Margin = new Thickness(0, 0, 6, 0);
                     label.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                    label.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
                     SignalNamesStackPanel.Children.Add(label);
                 }
                 // Draw plot
